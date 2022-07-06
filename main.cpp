@@ -6,6 +6,7 @@
 #include"route.h"
 #include"graphics.h"
 #include"transfer.h"
+#include"shortpath.h"
 using namespace std;
 
 map<string,Station*> stationNames;
@@ -38,18 +39,17 @@ void preSteps() {
 	vector<Station*> stationId;
 	vector<int> time;
 	int n = nodesTransfer.size();
-	int distances[n][n];
-	memset(distances,0,sizeof(distances));
-	/*vector<int> rout;
-	for(Transfer* stationPtr:nodesTransfer){
-		rout = stationPtr->getRoutes();
-		for(int i:rout){
-			routes[i]->getTimes();
-		}
-	}*/
-	int inx=0;
+	int distances[10][10];
+	for(int j=0;j<n;j++)
+		for(int i=0;i<n;i++)
+			if(j != i)
+				distances[j][i] = INF;
+			else
+				distances[j][i] = 0;
+
 	for(Route* routePtr:routes){
 		stationId.resize(0);
+		time.resize(0);
 		routePtr->getTimes(&stationId,&time);
 		for(int i=0;i+1<stationId.size();i++){
 			for(int j=0;j<nodesTransfer.size();j++){
@@ -62,13 +62,7 @@ void preSteps() {
 			distances[secondId][firstId] = time[i];
 		}
 	}
-
-	cout<<endl<<"Distancias de nodos: "<<endl;
-	for(int j=0;j<n;j++) {
-		for(int i=0;i<n;i++)
-			cout<<distances[j][i]<<' ';
-		cout<<endl;
-	}
+	fastesPath(n,distances);
 }
 
 void router() {
