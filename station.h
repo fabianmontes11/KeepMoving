@@ -12,7 +12,7 @@ public:
 	Station(string name,int route);
 	void status();
 	bool isTransfer();
-	void setTransfer();
+	int setTransfer();
 };
 
 Station::Station(string name,int route){
@@ -24,19 +24,14 @@ bool Station::isTransfer() {
 	return route == -1;
 }
 
-void Station::setTransfer() {
+int Station::setTransfer() {
+	int tmp = route;
 	route = -1;
+	return tmp;
 }
 
 void Station::status() {
 	cout<<name<<endl;
 }
-
-class Transfer {
-	Station* station;
-	vector<int> routes;
-public:
-	Transfer(){}
-};
 
 #endif //STATION
