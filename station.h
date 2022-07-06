@@ -13,6 +13,7 @@ public:
 	void status();
 	bool isTransfer();
 	int setTransfer();
+	string getName();
 };
 
 Station::Station(string name,int route){
@@ -32,6 +33,9 @@ int Station::setTransfer() {
 
 void Station::status() {
 	cout<<name<<endl;
+}
+string Station::getName() {
+	return name;
 }
 
 #endif //STATION

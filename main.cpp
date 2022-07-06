@@ -31,7 +31,7 @@ void test(){
 }
 
 void preSteps() {
-	cout<<"Mostrar rutas: "<<endl;
+	cout<<"Mostrar Rutas: "<<endl;
 	for(Transfer* node:nodesTransfer){
 		node->showRoutes();
 	}
@@ -41,9 +41,12 @@ void router() {
 	int nRoutes;
 	cout<<"Numero de Rutas: ";
 	cin>>nRoutes;
+	cout<<endl;
 	for(int i=0;i<nRoutes;i++){
 		setRoute();
+		cout<<endl;
 		routes[i]->status();
+		cout<<endl;
 	}
 	cout<<"Nodos Transbordo: "<<endl;
 	for(int i=0;i<nodesTransfer.size();i++)
@@ -63,13 +66,8 @@ void setRoute() {
 	string name;
 	/*OBTENER DATOS DE LA RUTA*/
 	fflush(stdin);
-	//cout<<"Datos de ruta <NOMBRE PRECIO ESTACIONES>: ";
-	cout<<"Nombre de ruta: ";
-	getline(cin,name);
-	cout<<"Precio del boleto: $";
-	cin>>price;
-	cout<<"Numero de estaciones: ";
-	cin>>nStations;
+	cout<<"Datos de Ruta <NOMBRE PRECIO ESTACIONES>: ";
+	cin>>name>>price>>nStations;
 	cout<<endl;
 	/*CREAR NUEVA RUTA*/
 	Route* routePtr = new Route(name,price);
@@ -85,17 +83,10 @@ void setStations(int nStations) {
 	int idRoute = routes.size()-1;
 	Route* routePtr = routes[idRoute];
 	/*LECTURA DE ESTACIONES*/
-	ac = 0;
 	for(int i=0;i<nStations;i++) {
 		fflush(stdin);
 		cout<<"Nombre de estacion: ";
-		getline(cin,name);
-		times.push_back(ac);
-		if(i+1 < nStations){
-			cout<<"Tiempo para siguiente estacion: ";
-			cin>>temp;
-			ac += temp;
-		}
+		getline(cin,name);		
 		if(stationNames.find(name) == stationNames.end()) //Nueva estacion
 			stationNames[name] = new Station(name,idRoute);
 		else if(!stationNames[name]->isTransfer()) { //Estacion existente
@@ -117,5 +108,15 @@ void setStations(int nStations) {
 		stations.push_back(stationNames[name]);
 	}
 	routePtr->setStations(stations);
+	
+	ac = 0;
+	br();
+	cout<<"Tiempos de Viaje"<<endl;
+	for(int i=0;i+1<nStations;i++){
+		cout<<stations[i]->getName()<<" -> "<<stations[i+1]->getName()<<": ";
+		times.push_back(ac);
+		cin>>temp;
+		ac += temp;
+	}
 	routePtr->setTimes(times);
 }
