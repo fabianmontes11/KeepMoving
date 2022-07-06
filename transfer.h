@@ -13,10 +13,14 @@ public:
 	void status();
 	void addRoute(int id);
 	void showRoutes();
+	vector<int> getRoutes();
 };
 
+vector<int> Transfer::getRoutes(){
+	return routes;
+}
 Transfer::Transfer(Station* s) {
-	station = s;	
+	station = s;
 }
 Transfer::~Transfer() {
 	delete station;

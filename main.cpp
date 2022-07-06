@@ -1,6 +1,7 @@
 #include<iostream>
 #include<algorithm>
 #include<map>
+#include<cstring>
 #include"station.h"
 #include"route.h"
 #include"graphics.h"
@@ -31,9 +32,42 @@ void test(){
 }
 
 void preSteps() {
-	cout<<"Mostrar Rutas: "<<endl;
-	for(Transfer* node:nodesTransfer){
-		node->showRoutes();
+	//get Distances...
+	//vector<Transfer*> transId;
+	int firstId,secondId;
+	vector<Station*> stationId;
+	vector<int> time;
+	int n = nodesTransfer.size();
+	int distances[n][n];
+	memset(distances,0,sizeof(distances));
+	/*vector<int> rout;
+	for(Transfer* stationPtr:nodesTransfer){
+		rout = stationPtr->getRoutes();
+		for(int i:rout){
+			routes[i]->getTimes();
+		}
+	}*/
+	int inx=0;
+	for(Route* routePtr:routes){
+		stationId.resize(0);
+		routePtr->getTimes(&stationId,&time);
+		for(int i=0;i+1<stationId.size();i++){
+			for(int j=0;j<nodesTransfer.size();j++){
+				if(nodesTransfer[j]->station == stationId[i])
+					firstId = j;
+				if(nodesTransfer[j]->station == stationId[i+1])
+					secondId = j;
+			}
+			distances[firstId][secondId] = time[i];
+			distances[secondId][firstId] = time[i];
+		}
+	}
+
+	cout<<endl<<"Distancias de nodos: "<<endl;
+	for(int j=0;j<n;j++) {
+		for(int i=0;i<n;i++)
+			cout<<distances[j][i]<<' ';
+		cout<<endl;
 	}
 }
 
@@ -51,6 +85,10 @@ void router() {
 	cout<<"Nodos Transbordo: "<<endl;
 	for(int i=0;i<nodesTransfer.size();i++)
 		nodesTransfer[i]->status();
+	cout<<"Mostrar Rutas: "<<endl;
+	for(Transfer* node:nodesTransfer){
+		node->showRoutes();
+	}
 }
 
 void deleteAll() {
@@ -118,5 +156,6 @@ void setStations(int nStations) {
 		cin>>temp;
 		ac += temp;
 	}
+	times.push_back(ac);
 	routePtr->setTimes(times);
 }
