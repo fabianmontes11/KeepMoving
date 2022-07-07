@@ -29,7 +29,8 @@ int main() {
 
 void test(){
 	router();
-	preSteps();
+	if(!nodesTransfer.empty())
+		preSteps();
 }
 
 void preSteps() {
@@ -88,7 +89,7 @@ void preSteps() {
 			secondId = i;
 
 	cout<<"Tiempo minimo: "<<distances[firstId][secondId]<<endl;
-	cout<<"Ruta: ";
+	cout<<"Ruta optima: ";
 	while(firstId != secondId){
 		name = nodesTransfer[firstId]->station->getName();
 		cout<<name<<" -> ";
@@ -136,14 +137,13 @@ void deleteAll() {
 
 void setRoute() {
 	int nStations,price;
-	string name;
 	/*OBTENER DATOS DE LA RUTA*/
 	fflush(stdin);
-	cout<<"Datos de Ruta <NOMBRE PRECIO ESTACIONES>: ";
-	cin>>name>>price>>nStations;
+	cout<<"Datos de Ruta <PRECIO N_DE_ESTACIONES>: ";
+	cin>>price>>nStations;
 	cout<<endl;
 	/*CREAR NUEVA RUTA*/
-	Route* routePtr = new Route(name,price);
+	Route* routePtr = new Route(price);
 	routes.push_back(routePtr);
 	setStations(nStations);
 }

@@ -8,13 +8,12 @@
 using namespace std;
 
 class Route {
-	string name;
 	vector<Station*> stations;
 	vector<int> times;
 	int price;
 	//Mis transbordos
 public:
-	Route(string name,int price);
+	Route(int price);
 	~Route();
 	void setStations(vector<Station*> st);
 	void setTimes(vector<int> time);
@@ -23,13 +22,14 @@ public:
 	void getTimes(vector<Station*>* stationId,vector<int>* retTime);
 };
 
-Route::Route(string name,int price) {
-	this->name = name;
+Route::Route(int price) {
 	this->price = price;
 }
 
 void Route::status() {
-	cout<<"Ruta: "<<name<<endl;
+	cout<<"Ruta "<<stations[0]->getName()<<'-'<<
+	stations[stations.size()-1]->getName()<<" $"<<
+	price<<endl;
 	for(Station* st:stations)
 		st->status();
 }
