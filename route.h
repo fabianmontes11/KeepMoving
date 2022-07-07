@@ -20,6 +20,7 @@ public:
 	void status();
 	int getTime(int a,int b);
 	void getTimes(vector<Station*>* stationId,vector<int>* retTime);
+	void findDistances(Station* stRef,int* toLeft,int* toRight,Station** leftTrans,Station** rightTrans);
 };
 
 Route::Route(int price) {
@@ -40,6 +41,36 @@ Route::~Route() {
 			delete s;
 }
 
+void Route::findDistances(Station* stRef,int* toLeft,int* toRight,Station** leftTrans,Station** rightTrans) {
+	int index,right,left;
+	int n = stations.size();
+	for(int i=0;i<n;i++)
+		if(stations[i] == stRef)
+			index = i;
+
+	right = left = index;
+	while((left>=0&&!stations[left]->isTransfer()) || (right<n&&!stations[right]->isTransfer())) {
+		if(left>=0 && !stations[left]->isTransfer())
+			left--;
+		if(right<n && !stations[right]->isTransfer())
+			right++;
+	}
+	if(right >= n)
+		right = -1;
+
+	if(right != -1){
+		*toRight = getTime(index,right);
+		*rightTrans = stations[right];
+	}
+	else
+		*rightTrans = NULL;
+	if(left != -1){
+		*toLeft = getTime(left,index);
+		*leftTrans = stations[left];
+	}
+	else
+		*leftTrans = NULL;
+}
 /*SETTERS Y GETTERS*/
 void Route::getTimes(vector<Station*>* stationId,vector<int>* retTime) {
 	Station* stPtr;

@@ -72,31 +72,104 @@ void preSteps() {
 	fastesPath(n,distances,paths);
 	//Calcular distancia de estacion x a nodos principales
 	string name;
-	Station* stPtr;
+	Station *stPtr,*stPtr1,*stPtr2;
 	fflush(stdin);
 	cout<<"Estacion de Salida: ";
 	getline(cin,name);
-	stPtr = stationNames[name];
-	for(int i=0;i<nodesTransfer.size();i++)
+	stPtr1 = stationNames[name];
+	/*for(int i=0;i<nodesTransfer.size();i++)
 		if(stPtr == nodesTransfer[i]->station)
-			firstId = i;
+			firstId = i;*/
 
 	cout<<"Estacion de Llegada: ";
 	getline(cin,name);
-	stPtr = stationNames[name];
-	for(int i=0;i<nodesTransfer.size();i++)
+	stPtr2 = stationNames[name];
+	/*for(int i=0;i<nodesTransfer.size();i++)
 		if(stPtr == nodesTransfer[i]->station)
-			secondId = i;
+			secondId = i;*/
+	/*
+		Calcular mejor opcion:
+		LeftTransfer + toLeft
+		RigthTransfer + toRight
+	*/
+	int routeId;
+	int leftDepartTrans,leftArriveTrans,rightDepartTrans,rightArriveTrans;
+	int leftDepart,rightDepart,leftArrive,rightArrive;
+	Station *leftTrans,*rightTrans;
+	//stPtr = nodesTransfer[firstId]->station;
+	routeId = stPtr1->getRoute();
+	routes[routeId]->findDistances(stPtr,&leftDepart,&rightDepart,&leftTrans,&rightTrans);
 
-	cout<<"Tiempo minimo: "<<distances[firstId][secondId]<<endl;
-	cout<<"Ruta optima: ";
+	//DEPARTS
+	if(leftTrans==NULL)
+		leftDepartTrans = -1;
+	if(rightTrans==NULL)
+		rightDepartTrans = -1;
+	for(int i=0;i<nodesTransfer.size();i++)
+		if(leftTrans == nodesTransfer[i]->station)
+			leftDepartTrans = i;
+		else if(rightTrans == nodesTransfer[i]->station)
+			rightDepartTrans = i;
+
+	//stPtr = nodesTransfer[secondId]->station;
+	routeId = stPtr2->getRoute();
+	routes[routeId]->findDistances(stPtr,&leftArrive,&rightArrive,&leftTrans,&rightTrans);
+
+	//ARRIVALS
+	if(leftTrans==NULL)
+		leftArriveTrans = -1;
+	if(rightTrans==NULL)
+		rightArriveTrans = -1;
+	for(int i=0;i<nodesTransfer.size();i++)
+		if(leftTrans == nodesTransfer[i]->station)
+			leftArriveTrans = i;
+		else if(rightTrans == nodesTransfer[i]->station)
+			rightArriveTrans = i;
+
+	/*CALCULOS PREVIOS A RESPUESTA*/
+	int minDistance,d,t;
+	string terminator;
+	minDistance = INF;
+	if(leftDepartTrans!=-1 && leftArriveTrans!=-1){
+		d = distances[leftDepartTrans][leftArriveTrans];
+		t = d+leftDepart+leftArrive;
+		minDistance = min(minDistance, t);
+		name = nodesTransfer[leftDepartTrans]->station->getName();
+		terminator = nodesTransfer[rightArriveTrans]->station->getName();
+	}
+	if(leftDepartTrans!=-1 && rightArriveTrans!=-1){
+		d = distances[leftDepartTrans][rightArriveTrans];
+		t = d+leftDepart+rightArrive;
+		minDistance = min(minDistance, t);
+		name = nodesTransfer[leftDepartTrans]->station->getName();
+		terminator = nodesTransfer[rightArriveTrans]->station->getName();
+	}
+	if( rightDepartTrans!=-1 && leftArriveTrans!=-1){
+		d = distances[rightDepartTrans][leftArriveTrans];
+		t = d+rightDepart+leftArrive;
+		minDistance = min(minDistance, t);
+		name = nodesTransfer[rightDepartTrans]->station->getName();
+		terminator = nodesTransfer[leftArriveTrans]->station->getName();
+	}
+	if( rightDepartTrans!=-1 && rightArriveTrans!=-1){
+		d = distances[rightDepartTrans][rightArriveTrans];
+		t = d+rightDepart+rightArrive;
+		minDistance = min(minDistance, t);
+		name = nodesTransfer[rightDepartTrans]->station->getName();
+		terminator = nodesTransfer[rightArriveTrans]->station->getName();
+	}
+
+	cout<<endl;
+	cout<<"Tiempo Minimo: "<<minDistance<<endl;
+	/*RUTA OPTIMA*/
+	cout<<"Ruta Optima: "<<stPtr1->getName()<<" -> ";
 	while(firstId != secondId){
 		name = nodesTransfer[firstId]->station->getName();
 		cout<<name<<" -> ";
 		firstId = paths[firstId][secondId];
 	}
 	name = nodesTransfer[firstId]->station->getName();
-	cout<<name<<endl;
+	cout<<name<<" -> "<<stPtr2->getName()<<endl;
 
 	/*FREE MEMORY USED*/
 	for(int i=0;i<n;i++){

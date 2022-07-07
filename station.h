@@ -14,6 +14,7 @@ public:
 	bool isTransfer();
 	int setTransfer();
 	string getName();
+	int getRoute();
 };
 
 Station::Station(string name,int route){
@@ -37,5 +38,7 @@ void Station::status() {
 string Station::getName() {
 	return name;
 }
-
+int Station::getRoute() {
+	return route;
+}
 #endif //STATION
