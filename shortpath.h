@@ -9,13 +9,8 @@ using namespace std;
 using namespace std;
 #define INF 1000
 
-void fastesPath(int nodes,int distances[10][10]) {
-	int paths[10][10];
+void fastesPath(int nodes,int** distances,int** paths) {
 	int sum;
-	for(int j=0;j<nodes;j++)
-		for(int i=0;i<nodes;i++)
-			paths[j][i] = i;
-		
 	for(int k=0;k<nodes;k++)
 		for(int j=0;j<nodes;j++){
 			if(j == k)
@@ -29,18 +24,6 @@ void fastesPath(int nodes,int distances[10][10]) {
 					}
 				}
 		}
-	cout<<"Matriz de distancias: "<<endl;
-	for(int i=0;i<nodes;i++){
-		for(int j=0;j<nodes;j++)
-			cout<<distances[i][j]<<' ';
-		cout<<endl;
-	}
-	cout<<"Matriz de recorridos: "<<endl;
-	for(int i=0;i<nodes;i++){
-		for(int j=0;j<nodes;j++)
-			cout<<paths[i][j]<<' ';
-		cout<<endl;
-	}
 }
 
 #endif //FLOYD_WARSHALL

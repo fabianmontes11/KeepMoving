@@ -34,19 +34,25 @@ void test(){
 
 void preSteps() {
 	//get Distances...
-	//vector<Transfer*> transId;
 	int firstId,secondId;
 	vector<Station*> stationId;
 	vector<int> time;
 	int n = nodesTransfer.size();
-	int distances[10][10];
-	for(int j=0;j<n;j++)
-		for(int i=0;i<n;i++)
+	/*INICIALIZAR VARIABLES*/
+	int** distances = new int*[n];
+	int** paths = new int*[n];
+	for(int j=0;j<n;j++) {
+		distances[j] = new int[n];
+		paths[j] = new int[n];
+		for(int i=0;i<n;i++){
+			paths[j][i] = i;
 			if(j != i)
 				distances[j][i] = INF;
 			else
 				distances[j][i] = 0;
-
+		}
+	}
+	/*PRE-INICIAR VALORES*/
 	for(Route* routePtr:routes){
 		stationId.resize(0);
 		time.resize(0);
@@ -62,7 +68,42 @@ void preSteps() {
 			distances[secondId][firstId] = time[i];
 		}
 	}
-	fastesPath(n,distances);
+	fastesPath(n,distances,paths);
+	//Calcular distancia de estacion x a nodos principales
+	string name;
+	Station* stPtr;
+	fflush(stdin);
+	cout<<"Estacion de Salida: ";
+	getline(cin,name);
+	stPtr = stationNames[name];
+	for(int i=0;i<nodesTransfer.size();i++)
+		if(stPtr == nodesTransfer[i]->station)
+			firstId = i;
+
+	cout<<"Estacion de Llegada: ";
+	getline(cin,name);
+	stPtr = stationNames[name];
+	for(int i=0;i<nodesTransfer.size();i++)
+		if(stPtr == nodesTransfer[i]->station)
+			secondId = i;
+
+	cout<<"Tiempo minimo: "<<distances[firstId][secondId]<<endl;
+	cout<<"Ruta: ";
+	while(firstId != secondId){
+		name = nodesTransfer[firstId]->station->getName();
+		cout<<name<<" -> ";
+		firstId = paths[firstId][secondId];
+	}
+	name = nodesTransfer[firstId]->station->getName();
+	cout<<name<<endl;
+
+	/*FREE MEMORY USED*/
+	for(int i=0;i<n;i++){
+		delete distances[i];
+		delete paths[i];
+	}
+	delete [] distances;
+	delete [] paths;
 }
 
 void router() {
